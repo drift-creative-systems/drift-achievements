@@ -206,6 +206,7 @@ export function makeGame(data) {
 		taChecked: data.taChecked || null,
 		taManual: Boolean(data.taManual),
 		completed: Boolean(data.completed),
+		finished: Boolean(data.finished),
 		onList: Boolean(data.onList),
 		hidden: Boolean(data.hidden),
 		notes: String(data.notes || ''),

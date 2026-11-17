@@ -9,6 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This pr
 ## [Unreleased]
 
 ### Added
+- [js/store.js] [js/app.js] [index.html] [css/styles.css] "Finished" status for games whose story is done but whose achievements aren't: a checkbox in the editor, a blue "Finished" badge on the row (Completed takes priority), and a "Finished" filter showing finished games that aren't completed yet
 - [worker/src/index.js] Password login (`POST /api/login`) issuing HMAC-signed session tokens: 12 hours by default, 30 days with "Keep me logged in". Failed logins are limited to 10 per IP per 15 minutes
 - [worker/src/index.js] [worker/wrangler.toml] Library storage in Cloudflare KV (`DXT_DATA`) via `GET`/`PUT /api/data`, with a revision check that returns 409 instead of overwriting changes made on another device. Bodies over 5 MB get 413
 - [index.html] [css/styles.css] [js/app.js] Login screen, "Log out" in Settings → Account, a loading state, a retry if the library fails to load, and a warning before closing the tab with an unsaved change

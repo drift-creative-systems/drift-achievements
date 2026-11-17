@@ -32,6 +32,8 @@
 	/* Status */
 	--success: #3ddc84;
 	--danger: #ff5a6e;
+	--info: #7db2ff;          /* "Finished" badge text, from the gradient's blue */
+	--info-soft: rgba(31, 123, 255, 0.16);
 
 	/* Type */
 	--font-head: "Poppins", system-ui, sans-serif;
@@ -650,6 +652,11 @@ code {
 	margin-left: 0.4rem;
 	background: rgba(61, 220, 132, 0.14);
 	color: var(--success);
+}
+
+.badge--finished {
+	background: var(--info-soft);
+	color: var(--info);
 }
 
 .tag {

@@ -12,8 +12,8 @@ Part of the **Drift** ecosystem · Creative Systems.
 - **TrueAchievements matching.** Each game is checked for a TA walkthrough (rechecked every 30 days) and linked as *Walkthrough*, *Achievement guide* or *Find on TrueAchievements*
 - **Your backlog kept.** Import the old Google Sheet. Games you haven't started stay on the list as "On my list", and your hand-picked TA links and notes are never overwritten
 - **Smart matching.** Xbox titles match your list by title ID, then by normalised name ("Assassin's Creed® Odyssey" = "Assassins Creed Odyssey"), then by the slug in your saved TA link ("Bladerunner" → "Blade Runner: Enhanced Edition")
-- **Filter and sort.** Played this month, in progress, not started, completed, has walkthrough, on my list, hidden. Sort by last played, name, completion or gamerscore left
-- **Inline editing.** Set a TA link, add notes, and mark games completed, on your list or hidden
+- **Filter and sort.** Played this month, in progress, not started, completed, finished, has walkthrough, on my list, hidden. Sort by last played, name, completion or gamerscore left
+- **Inline editing.** Set a TA link, add notes, and mark games completed, finished (story done, achievements still to get), on your list or hidden
 - **Auto-sync.** Syncs when you open the app if the last sync is more than an hour old
 - **Log in anywhere.** Password login. Your library is stored on your own Cloudflare Worker (KV), not in the browser, so it's the same on every device
 - **Private by design.** The API key and your library live on your own Cloudflare Worker. The browser only keeps your login session

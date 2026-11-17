@@ -160,6 +160,7 @@ const FILTERS = {
 	progress: (g) => !g.hidden && g.progress > 0 && !g.completed,
 	todo: (g) => !g.hidden && 0 === g.progress && !g.completed,
 	done: (g) => !g.hidden && g.completed,
+	finished: (g) => !g.hidden && g.finished && !g.completed,
 	walkthrough: (g) => !g.hidden && true === g.taWalkthrough,
 	list: (g) => !g.hidden && g.onList,
 	hidden: (g) => g.hidden,
@@ -233,6 +234,7 @@ function editorHtml(g) {
 			<fieldset class="editor__checks">
 				<legend class="visually-hidden">Status</legend>
 				<label class="check"><input type="checkbox" name="completed" ${g.completed ? 'checked' : ''}> Completed</label>
+				<label class="check"><input type="checkbox" name="finished" ${g.finished ? 'checked' : ''}> Finished</label>
 				<label class="check"><input type="checkbox" name="onList" ${g.onList ? 'checked' : ''}> On my list</label>
 				<label class="check"><input type="checkbox" name="hidden" ${g.hidden ? 'checked' : ''}> Hide</label>
 			</fieldset>
@@ -257,7 +259,7 @@ function rowHtml(g) {
 				${cover ? `<img src="${esc(cover)}" alt="" loading="lazy" decoding="async" width="80" height="80">` : `<span aria-hidden="true">${esc(g.name.charAt(0).toUpperCase())}</span>`}
 			</div>
 			<div class="game__main">
-				<h3 class="game__name">${esc(g.name)}${g.completed ? ' <span class="badge">Completed</span>' : ''}</h3>
+				<h3 class="game__name">${esc(g.name)}${g.completed ? ' <span class="badge">Completed</span>' : g.finished ? ' <span class="badge badge--finished">Finished</span>' : ''}</h3>
 				<p class="game__meta">
 					${g.platform ? `<span>${esc(g.platform)}</span>` : ''}
 					<span>${played ? `Last played ${esc(dateFmt.format(new Date(played)))}` : 'Not played yet'}</span>
@@ -416,6 +418,7 @@ function saveEditor(form, id) {
 	const patch = {
 		notes: form.elements.notes.value.trim(),
 		completed: form.elements.completed.checked,
+		finished: form.elements.finished.checked,
 		onList: form.elements.onList.checked,
 		hidden: form.elements.hidden.checked,
 	};
