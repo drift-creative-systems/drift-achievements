@@ -182,6 +182,8 @@ function renderHero() {
 	const error = store.getLastError();
 
 	const completed = games.filter((g) => g.completed).length;
+	// Same rule as the Finished filter: beaten but not fully completed.
+	const finished = games.filter((g) => g.finished && !g.completed).length;
 	const started = games.filter((g) => g.progress > 0);
 	const avg = started.length ? Math.round(started.reduce((n, g) => n + g.progress, 0) / started.length) : 0;
 	const gamerscore = profile.gamerscore || games.reduce((n, g) => n + g.gsCurrent, 0);
@@ -204,6 +206,7 @@ function renderHero() {
 		<dl class="hero__stats">
 			<div><dt>Games</dt><dd>${esc(games.length)}</dd></div>
 			<div><dt>Completed</dt><dd>${esc(completed)}</dd></div>
+			<div><dt>Finished</dt><dd>${esc(finished)}</dd></div>
 			<div><dt>Average progress</dt><dd>${esc(avg)}%</dd></div>
 		</dl>`;
 }
