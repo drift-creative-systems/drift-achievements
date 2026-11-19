@@ -1,5 +1,5 @@
 /**
- * Drift: Xbox Tracker — app controller.
+ * Drift: Achievements — app controller.
  * Handles login, renders the hero + library, wires filters/sort/search,
  * the inline editor, the settings dialog, and sync scheduling.
  */
@@ -182,6 +182,8 @@ function renderHero() {
 	const error = store.getLastError();
 
 	const completed = games.filter((g) => g.completed).length;
+	// Same rule as the Finished filter: beaten but not fully completed.
+	const finished = games.filter((g) => g.finished && !g.completed).length;
 	const started = games.filter((g) => g.progress > 0);
 	const avg = started.length ? Math.round(started.reduce((n, g) => n + g.progress, 0) / started.length) : 0;
 	const gamerscore = profile.gamerscore || games.reduce((n, g) => n + g.gsCurrent, 0);
@@ -204,6 +206,7 @@ function renderHero() {
 		<dl class="hero__stats">
 			<div><dt>Games</dt><dd>${esc(games.length)}</dd></div>
 			<div><dt>Completed</dt><dd>${esc(completed)}</dd></div>
+			<div><dt>Finished</dt><dd>${esc(finished)}</dd></div>
 			<div><dt>Average progress</dt><dd>${esc(avg)}%</dd></div>
 		</dl>`;
 }
@@ -547,7 +550,7 @@ async function testConnection() {
 		if (!r.hasKey) {
 			toast('Connected, but OPENXBL_KEY is not set on the Worker.', 'error');
 		} else if (!r.hasStore) {
-			toast('Connected, but the DXT_DATA KV namespace is not bound to the Worker.', 'error');
+			toast('Connected, but the DA_DATA KV namespace is not bound to the Worker.', 'error');
 		} else {
 			toast('Connected. The Worker has your OpenXBL key and library store.', 'success');
 		}
@@ -594,7 +597,7 @@ async function handleRestore(input) {
 
 function handleExport() {
 	const stamp = new Date().toISOString().slice(0, 10);
-	download(`drift-xbox-tracker-backup-${stamp}.json`, JSON.stringify(store.exportBackup(), null, 2), 'application/json');
+	download(`drift-achievements-backup-${stamp}.json`, JSON.stringify(store.exportBackup(), null, 2), 'application/json');
 }
 
 async function handleWipe() {
@@ -862,7 +865,7 @@ function bind() {
 
 	document.addEventListener('visibilitychange', maybeAutoSync);
 
-	window.addEventListener('dxt:logged-out', () => showLogin('Your session has expired. Log in again.'));
+	window.addEventListener('da:logged-out', () => showLogin('Your session has expired. Log in again.'));
 
 	// Saves are debounced — warn before closing the tab with one pending.
 	window.addEventListener('beforeunload', (e) => {
@@ -891,6 +894,11 @@ function bind() {
 }
 
 /* ---------- Boot ---------- */
+
+// First year 2026, shown as a range once the year moves on.
+const COPYRIGHT_FROM = 2026;
+const thisYear = new Date().getFullYear();
+$('[data-copyright-year]').textContent = thisYear > COPYRIGHT_FROM ? `${COPYRIGHT_FROM}–${thisYear}` : String(COPYRIGHT_FROM);
 
 bind();
 if (auth.isLoggedIn()) {

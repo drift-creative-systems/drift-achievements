@@ -1,5 +1,5 @@
 /**
- * Drift: Xbox Tracker — API proxy and library store (Cloudflare Worker)
+ * Drift: Achievements — API proxy and library store (Cloudflare Worker)
  *
  * Keeps the OpenXBL key off the client, does the TrueAchievements
  * walkthrough checks a browser can't (CORS), and stores the library in
@@ -17,7 +17,7 @@
  *   PUT  /api/data           — { rev, data } → { rev, saved }; 409 if rev is out of date
  *
  * Secrets: OPENXBL_KEY, LOGIN_PASSWORD, SESSION_SECRET.
- * Vars: ALLOWED_ORIGINS (comma separated).  KV binding: DXT_DATA.
+ * Vars: ALLOWED_ORIGINS (comma separated).  KV binding: DA_DATA.
  */
 
 const XBL_BASE = 'https://xbl.io/api/v2/';
@@ -64,7 +64,7 @@ export default {
 
 			switch (route) {
 				case 'GET /api/health':
-					return json({ ok: true, hasKey: Boolean(env.OPENXBL_KEY), hasStore: Boolean(env.DXT_DATA) }, 200, cors);
+					return json({ ok: true, hasKey: Boolean(env.OPENXBL_KEY), hasStore: Boolean(env.DA_DATA) }, 200, cors);
 				case 'GET /api/titles':
 					return json({ titles: await titles(env) }, 200, cors);
 				case 'GET /api/profile':
@@ -147,10 +147,10 @@ async function readJson(request, maxBytes) {
 }
 
 function requireStore(env) {
-	if (!env.DXT_DATA) {
-		throw new UpstreamError('The DXT_DATA KV namespace is not bound to the Worker.');
+	if (!env.DA_DATA) {
+		throw new UpstreamError('The DA_DATA KV namespace is not bound to the Worker.');
 	}
-	return env.DXT_DATA;
+	return env.DA_DATA;
 }
 
 /* ---------- Login & sessions ---------- */
@@ -362,7 +362,7 @@ async function checkWalkthrough(slug) {
 	try {
 		res = await fetch(`${TA_BASE}/game/${slug}/walkthrough`, {
 			redirect: 'follow',
-			headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DriftXboxTracker/1.0)' },
+			headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DriftAchievements/1.0)' },
 		});
 	} catch {
 		return null;

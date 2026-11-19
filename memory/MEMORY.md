@@ -1,7 +1,7 @@
-# Drift: Xbox Tracker — Memory Index
+# Drift: Achievements — Memory Index
 
-Project memory for Claude Code sessions on Drift: Xbox Tracker.
+Project memory for Claude Code sessions on Drift: Achievements.
 
 ---
 
-- [Project Overview](project-drift-xbox-tracker.md) — Architecture, decisions, constraints and current state
+- [Project Overview](project-drift-achievements.md) — Architecture, decisions, constraints and current state

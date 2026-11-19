@@ -4,7 +4,9 @@
  * "Keep me logged in" is ticked. If storage is blocked it lives in memory.
  */
 
-const KEY = 'dxt_session';
+const KEY = 'da_session';
+// Session key used before the rename to Drift: Achievements. Cleared on login and logout.
+const LEGACY_KEY = 'dxt_session';
 const STORAGES = ['sessionStorage', 'localStorage'];
 
 let memory = null;
@@ -49,6 +51,7 @@ export function clearSession() {
 	for (const name of STORAGES) {
 		try {
 			window[name].removeItem(KEY);
+			window[name].removeItem(LEGACY_KEY);
 		} catch {
 			// Nothing to clear.
 		}

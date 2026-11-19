@@ -34,6 +34,7 @@ worker/.wrangler/
 .env*.local
 
 # Backups exported from the app (contain your library)
+drift-achievements-backup-*.json
 drift-xbox-tracker-backup-*.json
 
 # Build output (if a bundler is ever added)

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Drift: Xbox Tracker are documented here.
+All notable changes to Drift: Achievements (formerly Drift: Xbox Tracker) are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project uses [Semantic Versioning](https://semver.org/).
 
@@ -8,8 +8,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This pr
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-19
+
+Renamed to **Drift: Achievements**. The library now lives on the Worker behind a password login. Upgrading needs a KV namespace and the `LOGIN_PASSWORD` and `SESSION_SECRET` secrets: see the README.
+
 ### Added
+- [LICENSE] [README.md] [index.html] GPL-2.0-or-later licence, and the Drift Creative Systems Ltd copyright and company lines in the README and the app footer (the footer year becomes a range from 2027)
+- [.github/workflows/release.yml] [.distignore] [.gitattributes] Release workflow that checks the tag against `APP_VERSION` (new, in `js/config.js`), `worker/package.json` and `CHANGELOG.md`, then attaches `drift-achievements.zip` (app + `worker/`, no `legacy/`, `memory/` or dev files) to the release. GitHub's source downloads leave out the same dev files
 - [js/store.js] [js/app.js] [index.html] [css/styles.css] "Finished" status for games whose story is done but whose achievements aren't: a checkbox in the editor, a blue "Finished" badge on the row (Completed takes priority), and a "Finished" filter showing finished games that aren't completed yet
+- [js/app.js] "Finished" count in the hero stats, next to Completed. It uses the same rule as the Finished filter, so the two numbers always match
 - [worker/src/index.js] Password login (`POST /api/login`) issuing HMAC-signed session tokens: 12 hours by default, 30 days with "Keep me logged in". Failed logins are limited to 10 per IP per 15 minutes
 - [worker/src/index.js] [worker/wrangler.toml] Library storage in Cloudflare KV (`DXT_DATA`) via `GET`/`PUT /api/data`, with a revision check that returns 409 instead of overwriting changes made on another device. Bodies over 5 MB get 413
 - [index.html] [css/styles.css] [js/app.js] Login screen, "Log out" in Settings → Account, a loading state, a retry if the library fails to load, and a warning before closing the tab with an unsaved change
@@ -21,6 +28,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This pr
 - [js/match.js] `safeImageSrc()`, which allows raster base64 data URLs (PNG/JPEG/WebP only, no SVG) alongside https images
 
 ### Changed
+- Renamed from **Drift: Xbox Tracker** to **Drift: Achievements**: app title, header, footer, docs, repo (`drift-creative-systems/drift-achievements`) and Worker (`drift-achievements-api`, same KV namespace). Backups are now `drift-achievements-backup-*.json`, and old `drift-xbox-tracker` backups still restore
+- [js/auth.js] [js/api.js] Session key `dxt_session` → `da_session` and event `dxt:logged-out` → `da:logged-out`. The old session key is cleared, so everyone logs in once after the update
+- [worker/] KV binding `DXT_DATA` → `DA_DATA` (same namespace id, so the library carries over)
+- [README.md] Restructured to match the other Drift products, with a banner, release steps and licence section
 - [js/store.js] The library is no longer stored in the browser. It loads from the Worker after login, is held in memory, and saves back after 800ms (debounced, one request at a time, never before a successful load)
 - [js/api.js] Sends the session token instead of the shared access token. A 401 logs out and returns to the login screen without losing in-memory edits
 - [index.html] [js/app.js] Settings "Connection" panel (Worker URL and access token) replaced by an "Account" panel. "Delete all local data" is now "Delete all data" and empties the library on the Worker
@@ -75,5 +86,5 @@ Not part of this project's version history; listed for context.
 - Google Sheet CSV import
 - `[xbox_tracker]` shortcode with filters, sort and admin inline editing
 
-[Unreleased]: https://github.com/drift-creative-systems/drift-xbox-tracker/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/drift-creative-systems/drift-xbox-tracker/releases/tag/v1.0.0
+[Unreleased]: https://github.com/drift-creative-systems/drift-achievements/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/drift-creative-systems/drift-achievements/releases/tag/v1.0.0

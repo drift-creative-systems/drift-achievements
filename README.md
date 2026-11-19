@@ -1,8 +1,13 @@
-# Drift: Xbox Tracker
+![Drift Creative Systems](.github/banner.jpg)
 
-Every game on your Xbox account in one place, with gamerscore, achievement progress, and a link to the right TrueAchievements walkthrough. It replaces the "Games to Play / Complete" spreadsheet.
+# Drift: Achievements
 
-Part of the **Drift** ecosystem · Creative Systems.
+Free Xbox library tracker by **Drift Creative Systems**. It shows every game on your Xbox account in one place, with gamerscore, achievement progress and a link to the right TrueAchievements walkthrough. It replaces the "Games to Play / Complete" spreadsheet.
+
+- Repository: [drift-creative-systems/drift-achievements](https://github.com/drift-creative-systems/drift-achievements). Download the latest `drift-achievements.zip` from [Releases](https://github.com/drift-creative-systems/drift-achievements/releases)
+- Licence: GPL-2.0-or-later
+- Needs: a free [OpenXBL](https://xbl.io) API key, a Cloudflare account (Workers + KV, free tier is fine) and any static host
+- Formerly **Drift: Xbox Tracker**. Old backups still restore
 
 ---
 
@@ -21,7 +26,7 @@ Part of the **Drift** ecosystem · Creative Systems.
 
 ---
 
-## How It Works
+## How it works
 
 ```
 Browser (static app, library held in memory)
@@ -29,7 +34,7 @@ Browser (static app, library held in memory)
    │  Authorization: Bearer <session token>
    ▼
 Cloudflare Worker (worker/)  ── holds OPENXBL_KEY, LOGIN_PASSWORD, SESSION_SECRET
-   ├──► KV namespace DXT_DATA   (your library: GET/PUT /api/data)
+   ├──► KV namespace DA_DATA    (your library: GET/PUT /api/data)
    ├──► xbl.io/api/v2/achievements, /account
    └──► trueachievements.com/game/<slug>/walkthrough
 ```
@@ -53,7 +58,7 @@ npx wrangler login
 
 # Create the KV namespace that stores your library,
 # then paste the id it prints into worker/wrangler.toml
-npx wrangler kv namespace create DXT_DATA
+npx wrangler kv namespace create DA_DATA
 
 npx wrangler secret put OPENXBL_KEY      # your OpenXBL key
 npx wrangler secret put LOGIN_PASSWORD   # the password you'll log into the app with
@@ -72,7 +77,7 @@ Changing `SESSION_SECRET` logs out every device. Failed logins are limited to 10
 
 ### 3. Host the app
 
-It's all static files. Serve the repo root (minus `worker/` and `legacy/`) from any static host: Cloudflare Pages, Netlify, GitHub Pages or plain hosting.
+It's all static files. Serve the folder (minus `worker/`) from any static host: Cloudflare Pages, Netlify, GitHub Pages or plain hosting.
 
 To run it locally:
 
@@ -110,7 +115,7 @@ If TA's Cloudflare challenges the Worker, every check lands in the third state. 
 
 ---
 
-## Google Sheet Import
+## Google Sheet import
 
 Expected columns, in order: **Done, Game, %, Walkthrough, TA URL, Notes**.
 
@@ -120,22 +125,28 @@ Expected columns, in order: **Done, Game, %, Walkthrough, TA URL, Notes**.
 
 ---
 
-## Tech Stack
+## Data and privacy
+
+- Your library, notes and settings are stored in a KV namespace on your own Cloudflare account, behind your login
+- The browser keeps only the login session token (`da_session`): `sessionStorage` by default, `localStorage` if you tick **Keep me logged in**. **Settings → Log out** removes it
+- The password, session secret and OpenXBL key are Worker secrets and never reach the browser
+- Saves carry a revision number, so a stale tab or second device can't overwrite newer changes; it reloads the latest copy instead
+- **Settings → Delete all data** empties the library on the Worker
+
+---
+
+## Development
 
 | | |
 |---|---|
 | App | Vanilla JavaScript (ES modules), HTML5, CSS3. No framework, no build step |
-| Storage | Cloudflare KV via the Worker. The browser keeps only the login session (`dxt_session`) |
+| Storage | Cloudflare KV via the Worker. The browser keeps only the login session |
 | Proxy | Cloudflare Workers + Wrangler |
 | Fonts | Poppins, Inter (Google Fonts) |
 | Data | OpenXBL, TrueAchievements |
 
----
-
-## Project Structure
-
 ```
-xbox-tracker/
+drift-achievements/
 ├── index.html              — App shell + settings dialog
 ├── css/
 │   └── styles.css          — Drift brand tokens, layout, components
@@ -143,7 +154,7 @@ xbox-tracker/
 │   ├── app.js              — Rendering, events, editor, settings, auto-sync
 │   ├── store.js            — In-memory library, debounced saves to the Worker, backup/restore
 │   ├── auth.js             — Login session token
-│   ├── config.js           — Worker URL (local and production)
+│   ├── config.js           — App version and Worker URL (local and production)
 │   ├── match.js            — Name normalisation, TA URLs, title matching
 │   ├── api.js              — Worker client
 │   ├── sync.js             — Xbox sync + TA walkthrough batch
@@ -156,27 +167,32 @@ xbox-tracker/
 │   ├── wrangler.toml
 │   ├── package.json
 │   └── .dev.vars.example
-├── legacy/wp-plugin/       — Original Bonsai Xbox Tracker WordPress plugin (reference only)
-├── memory/                 — Claude Code project memory
+├── legacy/wp-plugin/       — Original Bonsai Xbox Tracker WordPress plugin (reference only, not in releases)
+├── memory/                 — Claude Code project memory (not in releases)
 ├── CLAUDE.md
 ├── CHANGELOG.md
+├── LICENSE
 └── README.md
 ```
 
 ---
 
-## Data & Privacy
+## Releasing
 
-- Your library, notes and settings are stored in a KV namespace on your own Cloudflare account, behind your login
-- The browser keeps only the login session token: `sessionStorage` by default, `localStorage` if you tick **Keep me logged in**. **Settings → Log out** removes it
-- The password, session secret and OpenXBL key are Worker secrets and never reach the browser
-- Saves carry a revision number, so a stale tab or second device can't overwrite newer changes; it reloads the latest copy instead
-- **Settings → Delete all data** empties the library on the Worker
+1. Bump the version in **two** places: `APP_VERSION` in `js/config.js` and `version` in `worker/package.json`. Move the `[Unreleased]` notes in `CHANGELOG.md` under a new `## [X.Y.Z] - YYYY-MM-DD` heading.
+2. Merge `develop` → `main`, then publish a GitHub release tagged `vX.Y.Z`.
+3. `.github/workflows/release.yml` checks the versions and changelog match the tag, builds `drift-achievements.zip` from `.distignore` (the app and `worker/`, without `legacy/`, `memory/` or dev files) and attaches it to the release.
+
+GitHub's own "Source code" downloads leave out the same dev files via `.gitattributes`.
 
 ---
 
-## Part of Drift
+## Licence
 
-Drift: Xbox Tracker is one product in the Drift ecosystem by [Gak Design](https://gakdesign.co.uk) / [The Bonsai Digital Collective](https://bonsaidigital.co.uk).
+GPL-2.0-or-later. See [LICENSE](LICENSE).
 
 Xbox is a trademark of Microsoft. This project is not affiliated with or endorsed by Microsoft, OpenXBL or TrueAchievements.
+
+Copyright © 2026 Drift Creative Systems Ltd
+
+Drift Creative Systems Ltd. Registered in England and Wales, company number 17548220. Registered office: 167-169 Great Portland Street, 5th Floor, London W1W 5PF

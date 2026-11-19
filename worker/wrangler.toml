@@ -1,4 +1,4 @@
-name = "drift-xbox-tracker-proxy"
+name = "drift-achievements-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
@@ -8,10 +8,10 @@ compatibility_date = "2026-09-01"
 ALLOWED_ORIGINS = "https://xbox.driftcreativesystems.co.uk,http://localhost:8080"
 
 # Where the library is stored. Create the namespace once with:
-#   npx wrangler kv namespace create DXT_DATA
+#   npx wrangler kv namespace create DA_DATA
 # and paste the id it prints below. (`wrangler dev` uses a local copy.)
 [[kv_namespaces]]
-binding = "DXT_DATA"
+binding = "DA_DATA"
 id = "d87404c8327e415b8310379e6539accf"
 
 # Secrets — never put these in this file:
