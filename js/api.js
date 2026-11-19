@@ -1,7 +1,7 @@
 /**
  * Client for the Cloudflare Worker (worker/src/index.js).
  * A 401 on an authenticated call clears the session and fires
- * `dxt:logged-out` on window so the app can show the login screen.
+ * `da:logged-out` on window so the app can show the login screen.
  */
 
 import { WORKER_URL } from './config.js';
@@ -11,7 +11,7 @@ const TIMEOUT_MS = 30000;
 
 function loggedOut() {
 	auth.clearSession();
-	window.dispatchEvent(new CustomEvent('dxt:logged-out'));
+	window.dispatchEvent(new CustomEvent('da:logged-out'));
 }
 
 async function request(path, { method = 'GET', body, authed = true } = {}) {

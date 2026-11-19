@@ -1,0 +1,15 @@
+# Files left out of the GitHub release zip.
+/.git
+/.github
+/.vscode
+/build
+/legacy
+/memory
+/worker/node_modules
+/worker/.wrangler
+/worker/.dev.vars
+.gitignore
+.gitattributes
+.distignore
+CLAUDE.md
+MEMORY.md

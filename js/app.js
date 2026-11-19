@@ -1,5 +1,5 @@
 /**
- * Drift: Xbox Tracker — app controller.
+ * Drift: Achievements — app controller.
  * Handles login, renders the hero + library, wires filters/sort/search,
  * the inline editor, the settings dialog, and sync scheduling.
  */
@@ -550,7 +550,7 @@ async function testConnection() {
 		if (!r.hasKey) {
 			toast('Connected, but OPENXBL_KEY is not set on the Worker.', 'error');
 		} else if (!r.hasStore) {
-			toast('Connected, but the DXT_DATA KV namespace is not bound to the Worker.', 'error');
+			toast('Connected, but the DA_DATA KV namespace is not bound to the Worker.', 'error');
 		} else {
 			toast('Connected. The Worker has your OpenXBL key and library store.', 'success');
 		}
@@ -597,7 +597,7 @@ async function handleRestore(input) {
 
 function handleExport() {
 	const stamp = new Date().toISOString().slice(0, 10);
-	download(`drift-xbox-tracker-backup-${stamp}.json`, JSON.stringify(store.exportBackup(), null, 2), 'application/json');
+	download(`drift-achievements-backup-${stamp}.json`, JSON.stringify(store.exportBackup(), null, 2), 'application/json');
 }
 
 async function handleWipe() {
@@ -865,7 +865,7 @@ function bind() {
 
 	document.addEventListener('visibilitychange', maybeAutoSync);
 
-	window.addEventListener('dxt:logged-out', () => showLogin('Your session has expired. Log in again.'));
+	window.addEventListener('da:logged-out', () => showLogin('Your session has expired. Log in again.'));
 
 	// Saves are debounced — warn before closing the tab with one pending.
 	window.addEventListener('beforeunload', (e) => {
@@ -894,6 +894,11 @@ function bind() {
 }
 
 /* ---------- Boot ---------- */
+
+// First year 2026, shown as a range once the year moves on.
+const COPYRIGHT_FROM = 2026;
+const thisYear = new Date().getFullYear();
+$('[data-copyright-year]').textContent = thisYear > COPYRIGHT_FROM ? `${COPYRIGHT_FROM}–${thisYear}` : String(COPYRIGHT_FROM);
 
 bind();
 if (auth.isLoggedIn()) {

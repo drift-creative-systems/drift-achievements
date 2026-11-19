@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Drift: Xbox Tracker
+   Drift: Achievements
    Drift brand system — dark UI-first, Poppins + Inter, product accent violet.
    Radius scale: 8 cards · 12 modals · 16 panels · 24 hero.
    ========================================================================== */
@@ -10,7 +10,7 @@
 	--drift-white: #ffffff;
 	--drift-grey: #7a7f87;
 
-	/* Product accent — Drift: Xbox Tracker */
+	/* Product accent — Drift: Achievements */
 	--accent: #7b61ff;
 	--accent-strong: #6a4ff5; /* white text on this passes AA */
 	--accent-text: #a595ff;   /* accent as text on dark surfaces */
@@ -324,6 +324,14 @@ code {
 
 .footer p {
 	margin: 0;
+}
+
+.footer p + p {
+	margin-top: 0.5rem;
+}
+
+.footer__legal {
+	font-size: 0.75rem;
 }
 
 /* ---------- Login ---------- */

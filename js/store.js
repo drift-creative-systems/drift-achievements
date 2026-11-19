@@ -24,6 +24,9 @@ const DEFAULT_SETTINGS = {
 };
 
 export const BACKUP_VERSION = 1;
+const BACKUP_APP = 'drift-achievements';
+// Backups made before the rename (Drift: Xbox Tracker) still restore.
+const BACKUP_APPS = [BACKUP_APP, 'drift-xbox-tracker'];
 
 let doc = emptyDoc();
 let rev = 0;
@@ -278,7 +281,7 @@ export function setLastError(message) {
 
 export function exportBackup() {
 	return {
-		app: 'drift-xbox-tracker',
+		app: BACKUP_APP,
 		version: BACKUP_VERSION,
 		exported: new Date().toISOString(),
 		settings: getSettings(),
@@ -294,8 +297,8 @@ export function exportBackup() {
  * accessToken in settings; cleanSettings() drops them.
  */
 export function restoreBackup(data) {
-	if (!data || 'drift-xbox-tracker' !== data.app || !Array.isArray(data.games)) {
-		throw new Error('That file is not a Drift: Xbox Tracker backup.');
+	if (!data || !BACKUP_APPS.includes(data.app) || !Array.isArray(data.games)) {
+		throw new Error('That file is not a Drift: Achievements backup.');
 	}
 
 	const next = normalise({
@@ -339,7 +342,7 @@ export function readLegacyBackup() {
 		return null;
 	}
 	return {
-		app: 'drift-xbox-tracker',
+		app: BACKUP_APP,
 		version: BACKUP_VERSION,
 		settings: readLegacy('dxt_settings'),
 		profile: readLegacy('dxt_profile'),
