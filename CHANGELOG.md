@@ -8,6 +8,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This pr
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-19
+
+Renamed to **Drift: Achievements**. The library now lives on the Worker behind a password login. Upgrading needs a KV namespace and the `LOGIN_PASSWORD` and `SESSION_SECRET` secrets: see the README.
+
 ### Added
 - [LICENSE] [README.md] [index.html] GPL-2.0-or-later licence, and the Drift Creative Systems Ltd copyright and company lines in the README and the app footer (the footer year becomes a range from 2027)
 - [.github/workflows/release.yml] [.distignore] [.gitattributes] Release workflow that checks the tag against `APP_VERSION` (new, in `js/config.js`), `worker/package.json` and `CHANGELOG.md`, then attaches `drift-achievements.zip` (app + `worker/`, no `legacy/`, `memory/` or dev files) to the release. GitHub's source downloads leave out the same dev files

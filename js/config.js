@@ -4,7 +4,7 @@
  */
 
 // Must match the release tag (vX.Y.Z) and worker/package.json. Checked by .github/workflows/release.yml.
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '2.0.0';
 
 const LOCAL_HOSTS = ['localhost', '127.0.0.1'];
 const LOCAL_WORKER_URL = 'http://localhost:8787';
